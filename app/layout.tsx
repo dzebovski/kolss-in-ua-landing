@@ -1,33 +1,47 @@
 import type { Metadata } from "next";
-import { Literata, Onest } from "next/font/google";
-import { Footer } from "@/components/landing/footer";
-import { Header } from "@/components/landing/header";
-import { StickyMobileCta } from "@/components/landing/sticky-mobile-cta";
-import { siteUrl } from "@/lib/kolss-content";
+import type { CSSProperties } from "react";
+import { Geist, Geist_Mono, Lora } from "next/font/google";
+import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
-const onest = Onest({
-  variable: "--font-onest",
-  subsets: ["cyrillic", "latin"],
-  display: "swap",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin", "latin-ext", "cyrillic"],
 });
 
-const literata = Literata({
-  variable: "--font-literata",
-  subsets: ["cyrillic", "latin"],
-  display: "swap",
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin", "latin-ext"],
 });
+
+const lora = Lora({
+  variable: "--font-lora",
+  subsets: ["latin", "latin-ext", "cyrillic"],
+});
+
+const headingFontStyle = {
+  "--font-heading": lora.style.fontFamily,
+} as CSSProperties;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(siteConfig.url),
+  applicationName: siteConfig.name,
   title: {
-    default: "Кухні та меблі на замовлення в Києві й області | KOLSS",
-    template: "%s",
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.name}`,
   },
-  description:
-    "KOLSS виготовляє кухні та корпусні меблі на замовлення в Києві й області.",
-  applicationName: "KOLSS",
-  authors: [{ name: "KOLSS" }],
+  description: siteConfig.description,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: siteConfig.name,
+    description: siteConfig.description,
+    url: "/",
+    siteName: siteConfig.name,
+    locale: siteConfig.locale,
+    type: "website",
+  },
   robots: {
     index: true,
     follow: true,
@@ -42,13 +56,14 @@ export default function RootLayout({
   return (
     <html
       lang="uk"
-      className={`${onest.variable} ${literata.variable} h-full scroll-smooth antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${lora.variable} h-full antialiased`}
+      style={headingFontStyle}
     >
-      <body suppressHydrationWarning>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <StickyMobileCta />
+      <body
+        className="min-h-full bg-background text-foreground"
+        suppressHydrationWarning
+      >
+        {children}
       </body>
     </html>
   );

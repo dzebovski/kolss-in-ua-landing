@@ -1,11 +1,13 @@
 import type { MetadataRoute } from "next";
-import { allPages, siteUrl } from "@/lib/kolss-content";
+import { siteConfig } from "@/lib/site";
+
+const routes = ["/", "/kitchens", "/furniture", "/contacts"] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return allPages.map((page) => ({
-    url: `${siteUrl}${page.path === "/" ? "" : page.path}`,
+  return routes.map((path) => ({
+    url: new URL(path, siteConfig.url).toString(),
     lastModified: new Date("2026-05-20"),
-    changeFrequency: page.path === "/" ? "weekly" : "monthly",
-    priority: page.path === "/" ? 1 : 0.8,
+    changeFrequency: path === "/" ? "weekly" : "monthly",
+    priority: path === "/" ? 1 : 0.8,
   }));
 }
